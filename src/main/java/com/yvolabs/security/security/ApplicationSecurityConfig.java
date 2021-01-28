@@ -29,22 +29,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        /** Basic Auth example
-         * -> will perform a basic auth from a web browser a popup window(modal) -> username/password
-         * -> Or if using eg. postman /react app -> set request headers -> Authorization    Basic ***the user&password as base64****
-         *  Con: No way to logout
-         */
         http
                 .csrf().disable() // TODO: More on csrf later
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
-                /** 1. NOTE: Order does matters!! with antMatchers()
-                 *  2. used preAuthorized annotations instead */
-//                .antMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.GET, "/management/api/**").hasAnyRole(ADMIN.name(), ADMIN_TRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -57,21 +46,18 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails johnDoeUser = User.builder()
                 .username("johndoe")
                 .password(passwordEncoder.encode("$$123456"))
-//                .roles(STUDENT.name()) //ROLE_STUDENT
                 .authorities(STUDENT.grantedAuthorities())
                 .build();
 
         UserDetails adminUser = User.builder()
                 .username("adminuser")
                 .password(passwordEncoder.encode("$$654321"))
-//                .roles(ADMIN.name()) //ROLE_ADMIN
                 .authorities(ADMIN.grantedAuthorities())
                 .build();
 
         UserDetails adminTraineeUser = User.builder()
                 .username("admintraineeuser")
                 .password(passwordEncoder.encode("$$654321"))
-//                .roles(ADMIN_TRAINEE.name()) // ROLE_ADMIN_TRAINEE
                 .authorities(ADMIN_TRAINEE.grantedAuthorities())
                 .build();
 
