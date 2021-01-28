@@ -1,7 +1,6 @@
 package com.yvolabs.security.student;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 @AllArgsConstructor
 public class Student {
@@ -14,5 +13,13 @@ public class Student {
 
     public String getStudentName() {
         return studentName;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "studentId=" + studentId +
+                ", studentName='" + studentName + '\'' +
+                '}';
     }
 }

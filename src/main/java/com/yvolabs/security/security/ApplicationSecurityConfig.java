@@ -33,9 +33,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
          *  Con: No way to logout
          */
         http
+                .csrf().disable() // TODO: More on csrf later
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
+//                .antMatchers("/management/api/**").hasAuthority()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -57,6 +59,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles(ADMIN.name()) //ROLE_ADMIN
                 .build();
 
-        return new InMemoryUserDetailsManager(johnDoeUser, adminUser);
+        UserDetails adminTraineeUser = User.builder()
+                .username("admintraineeuser")
+                .password(passwordEncoder.encode("$$654321"))
+                .roles(ADMIN_TRAINEE.name()) // ROLE_ADMIN_TRAINEE
+                .build();
+
+        return new InMemoryUserDetailsManager(johnDoeUser, adminUser, adminTraineeUser);
     }
 }
