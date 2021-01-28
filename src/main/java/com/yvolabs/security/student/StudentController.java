@@ -27,11 +27,7 @@ public class StudentController {
                 .orElseThrow(() -> new IllegalStateException("student " + studentId + " does not exist."));
     }
 
-    @GetMapping
-    public List<Student> getStudents() {
 
-        return STUDENTS;
-    }
 
 
 }

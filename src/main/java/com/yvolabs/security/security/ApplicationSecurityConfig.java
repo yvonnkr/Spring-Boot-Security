@@ -39,10 +39,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
-                .antMatchers(HttpMethod.DELETE,"/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                .antMatchers(HttpMethod.POST,"/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                .antMatchers(HttpMethod.PUT,"/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
-                .antMatchers(HttpMethod.GET,"/management/api/**").hasAnyRole(ADMIN.name(),ADMIN_TRAINEE.name())
+                .antMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(COURSE_WRITE.getPermission())
+                .antMatchers(HttpMethod.GET, "/management/api/**").hasAnyRole(ADMIN.name(), ADMIN_TRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -55,21 +55,28 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails johnDoeUser = User.builder()
                 .username("johndoe")
                 .password(passwordEncoder.encode("$$123456"))
-                .roles(STUDENT.name()) //ROLE_STUDENT
+//                .roles(STUDENT.name()) //ROLE_STUDENT
+                .authorities(STUDENT.grantedAuthorities())
                 .build();
 
         UserDetails adminUser = User.builder()
                 .username("adminuser")
                 .password(passwordEncoder.encode("$$654321"))
-                .roles(ADMIN.name()) //ROLE_ADMIN
+//                .roles(ADMIN.name()) //ROLE_ADMIN
+                .authorities(ADMIN.grantedAuthorities())
                 .build();
 
         UserDetails adminTraineeUser = User.builder()
                 .username("admintraineeuser")
                 .password(passwordEncoder.encode("$$654321"))
-                .roles(ADMIN_TRAINEE.name()) // ROLE_ADMIN_TRAINEE
+//                .roles(ADMIN_TRAINEE.name()) // ROLE_ADMIN_TRAINEE
+                .authorities(ADMIN_TRAINEE.grantedAuthorities())
                 .build();
 
-        return new InMemoryUserDetailsManager(johnDoeUser, adminUser, adminTraineeUser);
+        return new InMemoryUserDetailsManager(
+                johnDoeUser,
+                adminUser,
+                adminTraineeUser
+        );
     }
 }
