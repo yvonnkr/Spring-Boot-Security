@@ -34,8 +34,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
          */
         http
                 .authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*")
-                .permitAll()
+                .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+                .antMatchers("/api/**").hasRole(STUDENT.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -51,12 +51,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles(STUDENT.name()) //ROLE_STUDENT
                 .build();
 
-        UserDetails janeDoeUser = User.builder()
-                .username("janedoe")
+        UserDetails adminUser = User.builder()
+                .username("adminuser")
                 .password(passwordEncoder.encode("$$654321"))
                 .roles(ADMIN.name()) //ROLE_ADMIN
                 .build();
 
-        return new InMemoryUserDetailsManager(johnDoeUser, janeDoeUser);
+        return new InMemoryUserDetailsManager(johnDoeUser, adminUser);
     }
 }
