@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.yvolabs.security.security.ApplicationUserRole.*;
 
 @Configuration
@@ -41,36 +43,40 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .permitAll();
-
+                .permitAll()
+                .defaultSuccessUrl("/courses", true)
+                .and()
+                .rememberMe()
+                .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+                .key("somethingverysecure");
 
     }
 
     @Override
     @Bean
     protected UserDetailsService userDetailsService() {
-        UserDetails johnDoeUser = User.builder()
-                .username("johndoe")
+        UserDetails john = User.builder()
+                .username("john")
                 .password(passwordEncoder.encode("$$123456"))
                 .authorities(STUDENT.grantedAuthorities())
                 .build();
 
-        UserDetails adminUser = User.builder()
-                .username("adminuser")
-                .password(passwordEncoder.encode("$$654321"))
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("$$123456"))
                 .authorities(ADMIN.grantedAuthorities())
                 .build();
 
-        UserDetails adminTraineeUser = User.builder()
-                .username("admintraineeuser")
-                .password(passwordEncoder.encode("$$654321"))
+        UserDetails adminTrainee = User.builder()
+                .username("adminTrainee")
+                .password(passwordEncoder.encode("$$123456"))
                 .authorities(ADMIN_TRAINEE.grantedAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(
-                johnDoeUser,
-                adminUser,
-                adminTraineeUser
+                john,
+                admin,
+                adminTrainee
         );
     }
 }
