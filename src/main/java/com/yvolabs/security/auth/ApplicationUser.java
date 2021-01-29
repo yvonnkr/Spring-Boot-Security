@@ -4,27 +4,27 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 public class ApplicationUser implements UserDetails {
-    private final List<? extends GrantedAuthority> grantedAuthorities;
-    private final String password;
     private final String userName;
+    private final String password;
+    private final Set<? extends GrantedAuthority> grantedAuthorities;
     private final Boolean isAccountNonExpired;
     private final Boolean isAccountNonLocked;
     private final Boolean isCredentialsNonExpired;
     private final Boolean isEnabled;
 
-    public ApplicationUser(List<? extends GrantedAuthority> grantedAuthorities,
+    public ApplicationUser(String userName,
                            String password,
-                           String userName,
+                           Set<? extends GrantedAuthority> grantedAuthorities,
                            Boolean isAccountNonExpired,
                            Boolean isAccountNonLocked,
                            Boolean isCredentialsNonExpired,
                            Boolean isEnabled) {
-        this.grantedAuthorities = grantedAuthorities;
         this.password = password;
         this.userName = userName;
+        this.grantedAuthorities = grantedAuthorities;
         this.isAccountNonExpired = isAccountNonExpired;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
